@@ -210,7 +210,7 @@
         @forelse($includes as $id => $include)
           @livewire('element', [
             'uuid' => $id,
-            'element' => $include
+            'element' => $include['id']
           ], key($id))
         @empty
         <div class="py-4" id="droppable" >

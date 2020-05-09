@@ -11,8 +11,8 @@ use Illuminate\Support\Str;
 
 class PageBuilder extends Component
 {
-    public $addedMessageVisible = '';
 
+    public $includes = array();
     public $html = array();
     public $computed = '';
     public $config = array(
@@ -20,24 +20,17 @@ class PageBuilder extends Component
         'meta' => '',
     );
 
-    public $includes = array();
-
     protected $listeners = [
         'componentUpdated' => 'storeUpdatedHTML',
         'componentRemoved' => 'removeComponent',
         'componentMoved' => 'componentMoved',
-        'selfRefresh' => 'render'
+        'computeHTML' => 'computeHTML'
     ];
 
     public function removeComponent($uuid)
     {
         unset($this->includes[$uuid]);
-        unset($this->html[$uuid]);
-        // dd($this->includes);
-        // $this->includes = array_values($this->includes);
-        // $collection = collect($this->includes);
-        // $collection->forget($index);
-        // $this->includes = $collection->all();
+        $this->emitSelf('computeHTML');
     }
 
     public function componentMoved($direction, $uuid)
@@ -73,37 +66,16 @@ class PageBuilder extends Component
             });
             $this->includes = $keyed->all();
         }
+        $this->emitSelf('computeHTML');
     }
 
     public function storeUpdatedHTML($uuid, $html)
     {
-        
-        // $this->html[$uuid] = $html;
-        // $collection = collect($this->html);
-        // $flat = $collection->flatten();
-        // $flattened = $flat->implode(',');
-        // $starter = '<!doctype html>
-
-        // <html lang="en">
-        // <head>
-        //   <meta charset="utf-8">
-        
-        //   <title>'.$this->config['title'].'</title>
-        //   <meta name="description" content="The HTML5 Herald">
-        //   <meta name="author" content="SitePoint">
-        
-        //   <link href="output.css" rel="stylesheet">
-        //   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-        //   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-        // </head>
-        
-        // <body>
-        //   '.$flattened.'
-        // </body>
-        // </html>';
-        // $this->computed = $starter;
-        // session(['computed' => $this->computed]);
+        $this->includes[$uuid]['html'] = $html;
+        $this->emitSelf('computeHTML');
     }
+
+    
 
     public function export()
     {
@@ -125,12 +97,47 @@ class PageBuilder extends Component
     public function addComponent($element)
     {
         $id = (string) Str::uuid();
-        $this->includes[$id] = $element;
+        $elem = Element::find($element);
+        $this->includes[$id] = array(
+            'id' => $element, 
+            'html' => $elem->html
+        );
+        $this->emitSelf('computeHTML');
     }
 
     public function mount()
     {
         session(['computed' => '']);
+    }
+
+    public function computeHTML()
+    {
+        $collection = collect($this->includes);
+        $plucked = $collection->pluck('html');
+        $flat = $plucked->flatten();
+        $flattened = $flat->implode(',');
+        $starter = '<!doctype html>
+
+        <html lang="en">
+        <head>
+          <meta charset="utf-8">
+        
+          <title>'.$this->config['title'].'</title>
+          <meta name="description" content="The HTML5 Herald">
+          <meta name="author" content="SitePoint">
+        
+          <link href="output.css" rel="stylesheet">
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tailwindcss/ui@latest/dist/tailwind-ui.min.css">
+          <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+          <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+        </head>
+        
+        <body>
+          '.$flattened.'
+        </body>
+        </html>';
+        $this->computed = $starter;
+        session(['computed' => $this->computed]);
     }
 
     public function render()
