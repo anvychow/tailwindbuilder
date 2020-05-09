@@ -33,65 +33,8 @@
         <script src="{{ mix('js/app.js') }}"></script>
         @livewireScripts
         <script>
-            function feature1() {
-                return {
-                    modal: false,
-                    component: null,
-                    editor: null,
-                    openModal() {
-                        const t = this;
-                        this.editor = ace.edit(this.$refs.editor);
-                        this.editor.setTheme("ace/theme/monokai");
-                        this.editor.session.setMode("ace/mode/javascript");
-                        this.modal = true;
-                    },
-                    closeModal() {
-                        this.component.set('html', this.editor.getValue());
-                        this.editor.destroy();
-                        this.modal = false;
-                        //@this.set('html', this.editor.getValue());
-                    },
-                }
-            }
-            function cta1() {
-                return {
-                    modal: false,
-                    component: null,
-                    editor: null,
-                    openModal() {
-                        const t = this;
-                        this.editor = ace.edit(this.$refs.editor);
-                        this.editor.setTheme("ace/theme/monokai");
-                        this.editor.session.setMode("ace/mode/javascript");
-                        this.modal = true;
-                    },
-                    closeModal() {
-                        this.component.set('html', this.editor.getValue());
-                        this.editor.destroy();
-                        this.modal = false;
-                        //@this.set('html', this.editor.getValue());
-                    },
-                }
-            }
-            function hero1() {
-                return {
-                    modal: false,
-                    component: null,
-                    editor: null,
-                    openModal() {
-                        const t = this;
-                        this.editor = ace.edit(this.$refs.editor);
-                        this.editor.setTheme("ace/theme/monokai");
-                        this.editor.session.setMode("ace/mode/javascript");
-                        this.modal = true;
-                    },
-                    closeModal() {
-                        this.component.set('html', this.editor.getValue());
-                        this.editor.destroy();
-                        this.modal = false;
-                        //@this.set('html', this.editor.getValue());
-                    },
-                }
+            function element() {
+                return 
             }
         </script>
     </body>

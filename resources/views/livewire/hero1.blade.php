@@ -2,8 +2,9 @@
     <x-modal>
         {{$html}}
     </x-modal>
+
     <div class="relative z-10">
-        <x-buttons></x-buttons>
+        <x-buttons index="{{$index}}"></x-buttons>
         <div class="relative z-0">
             {!! $html !!}
         </div>

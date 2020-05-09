@@ -1,16 +1,16 @@
 import 'alpinejs';
 
-var drake = dragula(
-  [document.querySelector('#draggable'), document.querySelector('#droppable')],
-  {
-    copy: true
-  }
-);
+// var drake = dragula(
+//   [document.querySelector('#draggable'), document.querySelector('#droppable')],
+//   {
+//     copy: true
+//   }
+// );
 
-drake.on('drop', function(el){
-  console.log(el.dataset.component);
-  window.livewire.emit('postAdded', el.dataset.component)
-});
+// drake.on('drop', function(el){
+//   console.log(el.dataset.component);
+//   window.livewire.emit('postAdded', el.dataset.component)
+// });
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Element;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Memory\MemoryAdapter;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class PageBuilder extends Component
 {
@@ -13,48 +15,94 @@ class PageBuilder extends Component
 
     public $html = array();
     public $computed = '';
-    public $config = '';
+    public $config = array(
+        'title' => 'Tailwind Builder',
+        'meta' => '',
+    );
 
     public $includes = array();
 
     protected $listeners = [
-        'postAdded' => 'showPostAddedMessage',
-        'componentUpdated' => 'storeUpdatedHTML'
+        'componentUpdated' => 'storeUpdatedHTML',
+        'componentRemoved' => 'removeComponent',
+        'componentMoved' => 'componentMoved',
+        'selfRefresh' => 'render'
     ];
 
-    public function showPostAddedMessage($param)
+    public function removeComponent($uuid)
     {
-        array_push($this->includes, $param);
-        // array_push($this->html, $param);
+        unset($this->includes[$uuid]);
+        unset($this->html[$uuid]);
+        // dd($this->includes);
+        // $this->includes = array_values($this->includes);
+        // $collection = collect($this->includes);
+        // $collection->forget($index);
+        // $this->includes = $collection->all();
     }
 
-    public function storeUpdatedHTML($key, $html)
+    public function componentMoved($direction, $uuid)
     {
-        $this->html[$key] = $html;
-        $collection = collect($this->html);
-        $flat = $collection->flatten();
-        $flattened = $flat->implode(',');
-        $starter = '<!doctype html>
+        $index = 0;
+        $includes = $this->includes;
+        $collect = collect($this->includes);
+        $last = ($collect->count() - 1);
+        $keys = $collect->keys();
+        $newArray = $keys->all();
+        $index = $keys->search($uuid);
 
-        <html lang="en">
-        <head>
-          <meta charset="utf-8">
+        if ($direction == 'up' && $index > 0) {
+
+            $out = array_splice($newArray, $index, 1);
+            array_splice($newArray, ($index - 1), 0, $out);
+            // dd($newArray);
+            $collection = collect($newArray);
+            $keyed = $collection->mapWithKeys(function ($item) use ($includes) {
+                return [$item => $includes[$item]];
+            });
+            $this->includes = $keyed->all();
+            // $this->emit('selfRefresh');
+        }
+
+        if ($direction == 'down' && $index < $last) {
+            $out = array_splice($newArray, $index, 1);
+            array_splice($newArray, ($index + 1), 0, $out);
+            // dd($newArray);
+            $collection = collect($newArray);
+            $keyed = $collection->mapWithKeys(function ($item) use ($includes) {
+                return [$item => $includes[$item]];
+            });
+            $this->includes = $keyed->all();
+        }
+    }
+
+    public function storeUpdatedHTML($uuid, $html)
+    {
         
-          <title>The HTML5 Herald</title>
-          <meta name="description" content="The HTML5 Herald">
-          <meta name="author" content="SitePoint">
+        // $this->html[$uuid] = $html;
+        // $collection = collect($this->html);
+        // $flat = $collection->flatten();
+        // $flattened = $flat->implode(',');
+        // $starter = '<!doctype html>
+
+        // <html lang="en">
+        // <head>
+        //   <meta charset="utf-8">
         
-          <link href="output.css" rel="stylesheet">
-          <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-          <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-        </head>
+        //   <title>'.$this->config['title'].'</title>
+        //   <meta name="description" content="The HTML5 Herald">
+        //   <meta name="author" content="SitePoint">
         
-        <body>
-          '.$flattened.'
-        </body>
-        </html>';
-        $this->computed = $starter;
-        session(['computed' => $this->computed]);
+        //   <link href="output.css" rel="stylesheet">
+        //   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+        //   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+        // </head>
+        
+        // <body>
+        //   '.$flattened.'
+        // </body>
+        // </html>';
+        // $this->computed = $starter;
+        // session(['computed' => $this->computed]);
     }
 
     public function export()
@@ -74,10 +122,21 @@ class PageBuilder extends Component
         // }, 'test.html');
     }
 
+    public function addComponent($element)
+    {
+        $id = (string) Str::uuid();
+        $this->includes[$id] = $element;
+    }
+
+    public function mount()
+    {
+        session(['computed' => '']);
+    }
+
     public function render()
     {
         return view('livewire.page-builder', [
-            'includes' => $this->includes
+            'elements' => Element::all()
         ]);
     }
 }

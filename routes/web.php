@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Zip;
+// use Zip;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,15 +38,15 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/download', function(Request $request){
 
-    Storage::put('test.html', $request->session()->get('computed'));
+    // Storage::put('test.html', $request->session()->get('computed'));
 
-    $zip = Zip::create('file.zip');
-    $zip->add(Storage::url('test.html'));
-    $zip->close();
-    // Storage::put($zip_file, $zip);
+    // $zip = Zip::create('file.zip');
+    // $zip->add(Storage::url('test.html'));
+    // $zip->close();
+    // // Storage::put($zip_file, $zip);
 
-    // return Storage::download($zip_file);
-    return response()->download('file.zip');
+    // // return Storage::download($zip_file);
+    // return response()->download('file.zip');
 });
 
 Route::get('/preview', function(Request $request){
