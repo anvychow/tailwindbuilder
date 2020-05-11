@@ -108,6 +108,7 @@ class PageBuilder extends Component
     public function mount()
     {
         session(['computed' => '']);
+        session(['css' => '']);
     }
 
     public function computeHTML()
@@ -115,7 +116,7 @@ class PageBuilder extends Component
         $collection = collect($this->includes);
         $plucked = $collection->pluck('html');
         $flat = $plucked->flatten();
-        $flattened = $flat->implode(',');
+        $flattened = $flat->implode('');
         $starter = '<!doctype html>
 
         <html lang="en">
@@ -123,12 +124,11 @@ class PageBuilder extends Component
           <meta charset="utf-8">
         
           <title>'.$this->config['title'].'</title>
-          <meta name="description" content="The HTML5 Herald">
-          <meta name="author" content="SitePoint">
+          <meta name="description" content="Tailwind UI Builder - Built by Sam Miller">
+          <meta name="author" content="Sam Miller">
         
-          <link href="output.css" rel="stylesheet">
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tailwindcss/ui@latest/dist/tailwind-ui.min.css">
           <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tailwindcss/ui@latest/dist/tailwind-ui.min.css">
           <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
         </head>
         

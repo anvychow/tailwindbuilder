@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-// use Zip;
+use Spatie\TemporaryDirectory\TemporaryDirectory;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,21 +39,30 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/download', function(Request $request){
 
-    // Storage::put('test.html', $request->session()->get('computed'));
+    // $html = 'public/index.html';
+    // $css = 'public/app.css';
+    // Storage::put($html, $request->session()->get('computed'));
+    // Storage::put($css, $request->session()->get('css'));
 
-    // $zip = Zip::create('file.zip');
-    // $zip->add(Storage::url('test.html'));
-    // $zip->close();
-    // // Storage::put($zip_file, $zip);
+    $zip = new ZipArchive();
+    $uuid = (string) Str::uuid();
+    $filename = "files - {$uuid}.zip";
 
-    // // return Storage::download($zip_file);
-    // return response()->download('file.zip');
+    if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
+        dd("cannot open <$filename>\n");
+    }
+
+    $zip->addFromString("index.html", $request->session()->get('computed'));
+    $zip->close();
+    // Storage::move($filename, 'public/'.$filename);
+    // storage_path('app/public/'.$filename)
+
+    return response()->download($filename)->deleteFileAfterSend();
+    
 });
 
 Route::get('/preview', function(Request $request){
-    Storage::put('style.css', $request->session()->get('css'));
-    // $echo = exec('cd ../storage/app && sudo npx tailwindcss build style.css -o output.css');
-    // dd($echo);
 
     return $request->session()->get('computed');
+
 });

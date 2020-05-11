@@ -239,7 +239,7 @@ class ElementSeeder extends Seeder
                   </div>
                 </div>
               </div>'
-            ]
+            ],
         ]);
     }
 }

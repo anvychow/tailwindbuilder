@@ -26,7 +26,7 @@
         <div class="mt-5 sm:mt-6">
             <span class="flex w-full rounded-md shadow-sm">
                 <button @click="closeModal()" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-                    Go back to dashboard
+                    Save and Close
                 </button>
             </span>
         </div>

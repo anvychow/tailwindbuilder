@@ -1,16 +1,8 @@
 import 'alpinejs';
+window.postcss = require('postcss');
 
-// var drake = dragula(
-//   [document.querySelector('#draggable'), document.querySelector('#droppable')],
-//   {
-//     copy: true
-//   }
-// );
+// window.tailwindcss = require('tailwindcss');
 
-// drake.on('drop', function(el){
-//   console.log(el.dataset.component);
-//   window.livewire.emit('postAdded', el.dataset.component)
-// });
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
