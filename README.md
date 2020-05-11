@@ -37,6 +37,6 @@ Now that your builder is installed and your table is ready, run: `valet link tai
 
 # Roadmap
 
-For V2 I am planning on adding in the ability to customize the CSS and compile directly through the tool. If you have any additional suggestions, please let me know! Thank you all!
+For V1 I am planning on adding in the ability to customize the CSS and compile directly through the tool. If you have any additional suggestions, please let me know! Thank you all!
 
 - Sam
