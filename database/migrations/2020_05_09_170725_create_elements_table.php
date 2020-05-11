@@ -16,8 +16,8 @@ class CreateElementsTable extends Migration
         Schema::create('elements', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('category', 100);
-            $table->text('thumbnail');
+            $table->string('category', 100)->nullable();
+            $table->text('thumbnail')->nullable();
             $table->longText('html');
             $table->timestamps();
         });

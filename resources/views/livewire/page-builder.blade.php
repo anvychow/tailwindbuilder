@@ -38,7 +38,7 @@
           <nav class="mt-5 px-2">
             @foreach($elements as $element)
               <div class="rounded-md shadow-md object-none hover:opacity-75 cursor-pointer" wire:click="addComponent({{$element->id}})">
-                  <img src="{{$element->thumbnail}}" alt="" srcset="" class=" rounded-md">
+                  <img src="{{$element->thumbnail}}" alt="{{$element->name}}" class="rounded-md">
               </div>
             @endforeach
           </nav>
@@ -79,7 +79,7 @@
         <nav class="mt-5 flex-1 px-2 bg-white space-y-2">
             @foreach($elements as $element)
               <div class="rounded-md shadow-md object-none hover:opacity-75 cursor-pointer" wire:click="addComponent({{$element->id}})">
-                  <img src="{{$element->thumbnail}}" alt="" srcset="" class=" rounded-md">
+                  <img src="{{$element->thumbnail}}" alt="{{$element->name}}" srcset="" class="rounded-md">
               </div>
             @endforeach
         </nav>
@@ -191,7 +191,7 @@
           <div class="border-4 border-dashed border-gray-200 rounded-lg h-96 flex items-center justify-center text-gray-500 text-xl font-base">
             <div class="inline-flex items-center">
               <svg class="w-6 h-6 mr-2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-              Click an component on the left to get started!
+              Click a component on the left to get started!
             </div>
           </div>
         </div>
